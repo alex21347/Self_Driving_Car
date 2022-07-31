@@ -108,80 +108,80 @@ if __name__ == "__main__":
 
 
     # ----- GUIDE POLICY -----
-    #actions3 = []
-    #speeds3 = []
-    #rewards3 = []
-    #survival3 = []
+    actions3 = []
+    speeds3 = []
+    rewards3 = []
+    survival3 = []
 
-    #for i in range(episodes):
-        #env = CarEnv(mode = "cont", midpoint_obs = True, test = True, LEVEL_ID = f'MAP_test{(i % 3) + 1}')
-        #done = False
-        #observation = env.reset()
-        #while not done:
-            #action = env.pp.midpoint_steering_angle()
-            #action = [np.interp(action, [-120, 120], [-1, 1])]
-            ##action, _states = model.predict(observation)
-            #actions3.append(action[0])
-            #observation, reward, done, info = env.step(action)
-            #env.render()
+    for i in range(episodes):
+        env = CarEnv(mode = "cont", midpoint_obs = True, test = True, LEVEL_ID = f'MAP_test{(i % 3) + 1}')
+        done = False
+        observation = env.reset()
+        while not done:
+            action = env.pp.midpoint_steering_angle()
+            action = [np.interp(action, [-120, 120], [-1, 1])]
+            #action, _states = model.predict(observation)
+            actions3.append(action[0])
+            observation, reward, done, info = env.step(action)
+            env.render()
 
-            #if done:
-                #if env.data_logger['episode_end'][-1][0] != 'crash':
-                    #speeds3.append(env.lap_time_running)
-                    #survival3.append(1)
-                #else:
-                    #print('car crashed so not appending speed list')
-                    #survival3.append(0)
-                #rewards3.append(env.total_reward)
-                #print('Guide Policy total reward : ', env.total_reward)
+            if done:
+                if env.data_logger['episode_end'][-1][0] != 'crash':
+                    speeds3.append(env.lap_time_running)
+                    survival3.append(1)
+                else:
+                    print('car crashed so not appending speed list')
+                    survival3.append(0)
+                rewards3.append(env.total_reward)
+                print('Guide Policy total reward : ', env.total_reward)
 
-            #if env.pp.exit:
-                #break
+            if env.pp.exit:
+                break
 
-    #stds3 = []
-    #for i in range(len(actions3) - 10):
-        #stds3.append(np.std(actions3[i:i+10]))
+    stds3 = []
+    for i in range(len(actions3) - 10):
+        stds3.append(np.std(actions3[i:i+10]))
 
 
 
-    ##OIL
+    #OIL
 
-    #actions4 = []
-    #speeds4 = []
-    #rewards4 = []
-    #survival4 = []
+    actions4 = []
+    speeds4 = []
+    rewards4 = []
+    survival4 = []
 
-    #filename2 = 'OIL_model_rf.sav'
-    #OIL_action_model = pickle.load(open(filename2, 'rb'))
+    filename2 = 'OIL_model_rf.sav'
+    OIL_action_model = pickle.load(open(filename2, 'rb'))
 
-    #for i in range(episodes):
-        #env = CarEnv(mode = "cont", midpoint_obs = False, test = True, LEVEL_ID = f'MAP_test{(i % 3) + 1}')
-        #done = False
-        #observation = env.reset()
-        #while not done:
-            #action = OIL_action_model.predict(np.array([observation]))
-            ##action = np.interp(action, [-1, 1], [-120, 120])
-            #observation, reward, done, info = env.step(action)
-            #env.render()
-            #actions4.append(action[0])
+    for i in range(episodes):
+        env = CarEnv(mode = "cont", midpoint_obs = False, test = True, LEVEL_ID = f'MAP_test{(i % 3) + 1}')
+        done = False
+        observation = env.reset()
+        while not done:
+            action = OIL_action_model.predict(np.array([observation]))
+            #action = np.interp(action, [-1, 1], [-120, 120])
+            observation, reward, done, info = env.step(action)
+            env.render()
+            actions4.append(action[0])
 
-            #if done:
-                #if env.data_logger['episode_end'][-1][0] != 'crash':
-                    #speeds4.append(env.lap_time_running)
-                    #survival4.append(1)
-                #else:
-                    #print('car crashed so not appending speed list')
-                    #survival4.append(0)
+            if done:
+                if env.data_logger['episode_end'][-1][0] != 'crash':
+                    speeds4.append(env.lap_time_running)
+                    survival4.append(1)
+                else:
+                    print('car crashed so not appending speed list')
+                    survival4.append(0)
 
-                #rewards4.append(env.total_reward)
-                #print('OIL total reward : ', env.total_reward)
+                rewards4.append(env.total_reward)
+                print('OIL total reward : ', env.total_reward)
 
-            #if env.pp.exit:
-                #break
+            if env.pp.exit:
+                break
 
-    #stds4 = []
-    #for i in range(len(actions4) - 10):
-            #stds4.append(np.std(actions4[i:i+10]))
+    stds4 = []
+    for i in range(len(actions4) - 10):
+            stds4.append(np.std(actions4[i:i+10]))
         
     pygame.quit()
 
